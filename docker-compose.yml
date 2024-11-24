@@ -1,0 +1,27 @@
+---
+version: "3"
+services:
+  web-server:
+    container_name: web-server
+    image: ${DOCKERHUB_USERNAME}/panda-web:latest
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+
+networks:
+  web:
+    driver: bridge
+

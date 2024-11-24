@@ -1,0 +1,30 @@
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+  receiver: 'telegram-warning'
+  routes:
+    - receiver: 'telegram-warning'
+      group_wait: 60s
+      matchers:
+        - severity="warning"
+        - severity="critical"
+
+receivers:
+  - name: 'telegram-warning'
+    telegram_configs:
+      - chat_id: -00000000000
+        bot_token: "323424234346:AA5656768682343_t_pF2324C9dOKc"
+        api_url: "https://api.telegram.org"
+        send_resolved: true
+        parse_mode: MarkdownV2
+        message: '{{ template "telegram.default.message" .}}'
+
+
+inhibit_rules:
+  - source_matchers:
+      - severity="critical"
+    target_matchers:
+      - severity="warning"
+    equal: ['instance']

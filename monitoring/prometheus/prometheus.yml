@@ -1,0 +1,17 @@
+global:
+  scrape_interval:     10s 
+rule_files:
+  - "alerts.yml"
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - 'alertmanager:9093'  # URL Alertmanager
+scrape_configs:
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['Hostname:9112']
+  
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['Hostname:9100']

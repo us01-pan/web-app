@@ -1,0 +1,22 @@
+groups:
+  - name: host-alerts
+    rules:
+      # Алерт на використання CPU хоста вище 90% більше 2 хвилин
+      - alert: HighHostCPUUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 90
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Високе використання CPU хоста"
+          description: "Використання CPU хоста перевищує 90% за останні 2 хвилини ({{ $value }}%)"
+      
+      # Алерт на використання пам'яті хоста вище 90% більше 2 хвилин
+      - alert: HighHostMemoryUsage
+        expr: (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 > 90
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Високе використання пам'яті хоста"
+          description: "Використання пам'яті хоста перевищує 90% за останні 2 хвилини ({{ $value }}%)"
